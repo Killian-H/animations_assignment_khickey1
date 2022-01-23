@@ -12,10 +12,12 @@ class GameEngine {
         this.entitiesToAdd = [];
 
         // Information on the input
-        this.click = null;
-        this.mouse = null;
-        this.wheel = null;
-        this.keys = {};
+        this.left = false;
+        this.right = false;
+        this.up = false;
+        this.down = false;
+        this.space = false;
+        this.shift = false;
 
         // THE KILL SWITCH
         this.running = false;
@@ -48,6 +50,53 @@ class GameEngine {
     };
 
     startInput() {
+        var that = this;
+        this.ctx.canvas.addEventListener("Keydown", function (e) {
+            switch (e.code) {
+                case "KeyW":
+                    that.up = true;
+                    break;
+                case "KeyA":
+                    that.left = true;
+                    break;
+                case "KeyS":
+                    that.down = true;
+                    break;
+                case "KeyD":
+                    that.right = true;
+                    break;
+                case "ShiftLeft":
+                    that.shift = true;
+                    break;
+                case "Space":
+                    that.space = true;
+                    break;
+            }
+        }, false);
+
+        this.ctx.canvas.addEventListener("Keyup", function (e) {
+            switch (e.code) {
+                case "KeyW":
+                    that.up = false;
+                    break;
+                case "KeyA":
+                    that.left = false;
+                    break;
+                case "KeyS":
+                    that.down = false;
+                    break;
+                case "KeyD":
+                    that.right = false;
+                    break;
+                case "ShiftLeft":
+                    that.shift = false;
+                    break;
+                case "Space":
+                    that.space = true;
+                    break;
+            }
+        }, false);
+
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
@@ -92,9 +141,11 @@ class GameEngine {
     };
 
     addEntity(entity) {
-        this.entitiesToAdd.push(entity);
+        this.entities.push(entity);
     };
 
+    
+ 
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
